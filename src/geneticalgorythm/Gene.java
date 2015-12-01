@@ -1,5 +1,8 @@
 package geneticalgorythm;
 
+import java.util.Arrays;
+import java.util.Random;
+
 public class Gene {
     // --- variables:
 
@@ -33,10 +36,18 @@ public class Gene {
     }
 
     /**
-     * Randomizes the numbers on the mChromosome array to values 0 or 1
+     * Randomizes the numbers on the mChromosome array to values between 0 or 37
      */
-    public void randomizeChromosome(){
+    public void randomizeChromosome(Random randomGen){
         // code for randomization of initial weights goes HERE
+        int counter;
+        for(int j = 0; j < GeneticAlgorithm.CHROMOSOME_SIZE/4; j++) {
+            counter = 0;
+            for (int i = 4*j; i < 4 +(4*j); i++) {
+                counter += randomGen.nextInt(37);
+                mChromosome[i] = counter;
+            }
+        }
     }
 
     /**
@@ -98,19 +109,23 @@ public class Gene {
      * at the positions where the chromosome is 1 and a's at the posiitons
      * where the chromosme is 0
      */
-    public String getPhenotype() {
+    public int[] getPhenotype() {
         // create an empty string
-        String result="";
-        for(int i = 0; i < mChromosome.length; i++){
-            // populate it with either A's or a's, depending on the the
-            if(mChromosome[i]==1){
-                result+= "A";
-            } else {
-                result+= "a";
-            }
-        }
-        return result;
+        return mChromosome;
     }
-    
-    
+
+    public void printPhenotype() {
+        System.out.println ("If CLOSEST_GHOST is NEAR, DANGER is HIGH");
+        System.out.println ("Función de pertenencia Fantasma Cerca/Danger High =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)) + "\n");
+        System.out.println ("If CLOSEST_GHOST is MEDIUM, DANGER is MEDIUM");
+        System.out.println ("Función de pertenencia Fantasma Medio/Danger Medium =" + Arrays.toString(Arrays.copyOfRange(mChromosome,4,8)) + "\n");
+        System.out.println ("If CLOSEST_GHOST is FAR, DANGER is LOW");
+        System.out.println ("Función de pertenencia Fantasma Lejos/Danger Low =" + Arrays.toString(Arrays.copyOfRange(mChromosome,8,12)) + "\n");
+
+        System.out.println ("Actions");
+        System.out.println ("If DANGER is HIGH, Pacman is RunningAwayFromGhost");
+        System.out.println ("If DANGER is MEDIUM, Pacman is GoingToClosestPowerpill");
+        System.out.println ("If DANGER is LOW, Pacman is GoingToClosestPill");
+
+    }
 }

@@ -1,6 +1,8 @@
 package geneticalgorythm;
 
 import java.util.ArrayList;     // arrayLists are more versatile than arrays
+import java.util.Arrays;
+import java.util.Random;
 
 
 /**
@@ -14,7 +16,7 @@ import java.util.ArrayList;     // arrayLists are more versatile than arrays
 
 public class GeneticAlgorithm {
     // --- constants
-    static int CHROMOSOME_SIZE=10;
+    static int CHROMOSOME_SIZE=12;
     static int POPULATION_SIZE=500;
 
     // --- variables:
@@ -34,9 +36,10 @@ public class GeneticAlgorithm {
     public GeneticAlgorithm(int size){
         // initialize the arraylist and each gene's initial weights HERE
         mPopulation = new ArrayList<Gene>();
+        Random randomGenerator = new Random();
         for(int i = 0; i < size; i++){
             Gene entry = new Gene();
-            entry.randomizeChromosome();
+            entry.randomizeChromosome(randomGenerator);
             mPopulation.add(entry);
         }
     }
@@ -78,50 +81,56 @@ public class GeneticAlgorithm {
      */
     public Gene getGene(int index){ return mPopulation.get(index); }
 
+    public void printPopulation() { for(Gene gene : mPopulation) System.out.println(Arrays.toString(gene.getPhenotype()));}
+
     // Genetic Algorithm maxA testing method
     public static void main( String[] args ){
         // Initializing the population (we chose 500 genes for the population,
         // but you can play with the population size to try different approaches)
         GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
-        int generationCount = 0;
-        // For the sake of this sample, evolution goes on forever.
-        // If you wish the evolution to halt (for instance, after a number of
-        //   generations is reached or the maximum fitness has been achieved),
-        //   this is the place to make any such checks
-        while(true){
-            // --- evaluate current generation:
-            population.evaluateGeneration();
-            // --- print results here:
-            // we choose to print the average fitness,
-            // as well as the maximum and minimum fitness
-            // as part of our progress monitoring
-            float avgFitness=0.f;
-            float minFitness=Float.POSITIVE_INFINITY;
-            float maxFitness=Float.NEGATIVE_INFINITY;
-            String bestIndividual="";
-		String worstIndividual="";
-            for(int i = 0; i < population.size(); i++){
-                float currFitness = population.getGene(i).getFitness();
-                avgFitness += currFitness;
-                if(currFitness < minFitness){
-                    minFitness = currFitness;
-                    worstIndividual = population.getGene(i).getPhenotype();
-                }
-                if(currFitness > maxFitness){
-                    maxFitness = currFitness;
-                    bestIndividual = population.getGene(i).getPhenotype();
-                }
-            }
-            if(population.size()>0){ avgFitness = avgFitness/population.size(); }
-            String output = "Generation: " + generationCount;
-            output += "\t AvgFitness: " + avgFitness;
-            output += "\t MinFitness: " + minFitness + " (" + worstIndividual +")";
-            output += "\t MaxFitness: " + maxFitness + " (" + bestIndividual +")";
-            System.out.println(output);
-            // produce next generation:
-            population.produceNextGeneration();
-            generationCount++;
-        }
+        System.out.println();
+        population.getGene(0).printPhenotype();
+//        population.printPopulation();
+
+//        int generationCount = 0;
+//        // For the sake of this sample, evolution goes on forever.
+//        // If you wish the evolution to halt (for instance, after a number of
+//        //   generations is reached or the maximum fitness has been achieved),
+//        //   this is the place to make any such checks
+////        while(true){
+//            // --- evaluate current generation:
+//            population.evaluateGeneration();
+//            // --- print results here:
+//            // we choose to print the average fitness,
+//            // as well as the maximum and minimum fitness
+//            // as part of our progress monitoring
+//            float avgFitness=0.f;
+//            float minFitness=Float.POSITIVE_INFINITY;
+//            float maxFitness=Float.NEGATIVE_INFINITY;
+//            String bestIndividual="";
+//		String worstIndividual="";
+//            for(int i = 0; i < population.size(); i++){
+//                float currFitness = population.getGene(i).getFitness();
+//                avgFitness += currFitness;
+//                if(currFitness < minFitness){
+//                    minFitness = currFitness;
+//                    worstIndividual = population.getGene(i).getPhenotype();
+//                }
+//                if(currFitness > maxFitness){
+//                    maxFitness = currFitness;
+//                    bestIndividual = population.getGene(i).getPhenotype();
+//                }
+//            }
+//            if(population.size()>0){ avgFitness = avgFitness/population.size(); }
+//            String output = "Generation: " + generationCount;
+//            output += "\t AvgFitness: " + avgFitness;
+//            output += "\t MinFitness: " + minFitness + " (" + worstIndividual +")";
+//            output += "\t MaxFitness: " + maxFitness + " (" + bestIndividual +")";
+//            System.out.println(output);
+//            // produce next generation:
+//            population.produceNextGeneration();
+//            generationCount++;
+//        }
     }
 };
 
