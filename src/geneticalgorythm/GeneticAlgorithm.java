@@ -1,13 +1,13 @@
-import java.util.Collections;
-import java.util.Random;        // for generating random numbers
+package geneticalgorythm;
+
 import java.util.ArrayList;     // arrayLists are more versatile than arrays
 
 
 /**
  * Genetic Algorithm sample class <br/>
  * <b>The goal of this GA sample is to maximize the number of capital letters in a String</b> <br/>
- * compile using "javac GeneticAlgorithm.java" <br/>
- * test using "java GeneticAlgorithm" <br/>
+ * compile using "javac geneticalgorythm.GeneticAlgorithm.java" <br/>
+ * test using "java geneticalgorythm.GeneticAlgorithm" <br/>
  *
  * @author A.Liapis
  */
@@ -28,7 +28,7 @@ public class GeneticAlgorithm {
     // --- functions:
 
     /**
-     * Creates the starting population of Gene classes, whose chromosome contents are random
+     * Creates the starting population of geneticalgorythm.Gene classes, whose chromosome contents are random
      * @param size: The size of the popultion is passed as an argument from the main class
      */
     public GeneticAlgorithm(int size){
@@ -72,9 +72,9 @@ public class GeneticAlgorithm {
      */
     public int size(){ return mPopulation.size(); }
     /**
-     * Returns the Gene at position <b>index</b> of the mPopulation arrayList
-     * @param index: the position in the population of the Gene we want to retrieve
-     * @return the Gene at position <b>index</b> of the mPopulation arrayList
+     * Returns the geneticalgorythm.Gene at position <b>index</b> of the mPopulation arrayList
+     * @param index: the position in the population of the geneticalgorythm.Gene we want to retrieve
+     * @return the geneticalgorythm.Gene at position <b>index</b> of the mPopulation arrayList
      */
     public Gene getGene(int index){ return mPopulation.get(index); }
 

@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="jfuzzylite">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/mamdani" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/mamdani/matlab" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/mamdani/octave" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/takagi-sugeno" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/takagi-sugeno/matlab" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/takagi-sugeno/octave" />
+      <root url="jar://$PROJECT_DIR$/lib/jfuzzylite.jar!/examples/tsukamoto" />
+    </SOURCES>
+  </library>
+</component>

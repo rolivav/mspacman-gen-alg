@@ -1,3 +1,5 @@
+package geneticalgorythm;
+
 public class Gene {
     // --- variables:
 
@@ -39,12 +41,12 @@ public class Gene {
 
     /**
      * Creates a number of offspring by combining (using crossover) the current
-     * Gene's chromosome with another Gene's chromosome.
+     * geneticalgorythm.Gene's chromosome with another geneticalgorythm.Gene's chromosome.
      * Usually two parents will produce an equal amount of offpsring, although
      * in other reproduction strategies the number of offspring produced depends
      * on the fitness of the parents.
      * @param other: the other parent we want to create offpsring from
-     * @return Array of Gene offspring (default length of array is 2).
+     * @return Array of geneticalgorythm.Gene offspring (default length of array is 2).
      * These offspring will need to be added to the next generation.
      */
     public Gene[] reproduce(Gene other){
@@ -63,7 +65,7 @@ public class Gene {
     public void mutate(){
     }
     /**
-     * Sets the fitness, after it is evaluated in the GeneticAlgorithm class.
+     * Sets the fitness, after it is evaluated in the geneticalgorythm.GeneticAlgorithm class.
      * @param value: the fitness value to be set
      */
     public void setFitness(float value) { mFitness = value; }
@@ -85,7 +87,7 @@ public class Gene {
      */
     public void setChromosomeElement(int index, int value){ mChromosome[index]=value; }
     /**
-     * Returns the size of the chromosome (as provided in the Gene constructor)
+     * Returns the size of the chromosome (as provided in the geneticalgorythm.Gene constructor)
      * @return the size of the mChromosome array
      */
     public int getChromosomeSize() { return mChromosome.length; }
