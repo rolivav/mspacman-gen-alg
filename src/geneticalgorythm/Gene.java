@@ -36,15 +36,16 @@ public class Gene {
     }
 
     /**
-     * Randomizes the numbers on the mChromosome array to values between 0 or 37
+     * Randomizes the numbers on the mChromosome array to values between 0 and GeneticAlgorithm.MAXIMUM_DISTANCE/4
      */
     public void randomizeChromosome(Random randomGen){
         // code for randomization of initial weights goes HERE
+        int limit = (int)Math.floor(GeneticAlgorithm.MAXIMUM_DISTANCE/4);
         int counter;
         for(int j = 0; j < GeneticAlgorithm.CHROMOSOME_SIZE/4; j++) {
             counter = 0;
             for (int i = 4*j; i < 4 +(4*j); i++) {
-                counter += randomGen.nextInt(37);
+                counter += randomGen.nextInt(limit);
                 mChromosome[i] = counter;
             }
         }
@@ -109,23 +110,44 @@ public class Gene {
      * at the positions where the chromosome is 1 and a's at the posiitons
      * where the chromosme is 0
      */
-    public int[] getPhenotype() {
-        // create an empty string
+    public int[][] getPhenotype() {
+        int[][] result = new int[GeneticAlgorithm.CHROMOSOME_SIZE/4][4];
+
+        for(int i = 0; i < GeneticAlgorithm.CHROMOSOME_SIZE/4; i ++) {
+            result[i] = Arrays.copyOfRange(mChromosome, i*4, i*4 + 4);
+        }
+        return result;
+    }
+
+    public double[][] getDecodedPhenotype() {
+
+        int[][] phenotype = getPhenotype();
+        int limit = 4*(int)Math.floor(GeneticAlgorithm.MAXIMUM_DISTANCE/4);
+        double [][] result = new double[GeneticAlgorithm.CHROMOSOME_SIZE/4][4];
+
+        for(int j = 0; j < GeneticAlgorithm.CHROMOSOME_SIZE/4; j++) {
+            for(int i = 0; i < 4; i++) {
+                result[j][i] = (double)phenotype[j][i]/limit;
+            }
+        }
+        return result;
+    }
+
+    public int[] getChromosome() {
         return mChromosome;
     }
 
     public void printPhenotype() {
         System.out.println ("If CLOSEST_GHOST is NEAR, DANGER is HIGH");
-        System.out.println ("Función de pertenencia Fantasma Cerca/Danger High =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)) + "\n");
-        System.out.println ("If CLOSEST_GHOST is MEDIUM, DANGER is MEDIUM");
-        System.out.println ("Función de pertenencia Fantasma Medio/Danger Medium =" + Arrays.toString(Arrays.copyOfRange(mChromosome,4,8)) + "\n");
-        System.out.println ("If CLOSEST_GHOST is FAR, DANGER is LOW");
-        System.out.println ("Función de pertenencia Fantasma Lejos/Danger Low =" + Arrays.toString(Arrays.copyOfRange(mChromosome,8,12)) + "\n");
+        System.out.println ("If CLOSEST_GHOST is MEDIUM, DANGER is MODERATE");
+        System.out.println ("If CLOSEST_GHOST is FAR, DANGER is LOW\n");
 
-        System.out.println ("Actions");
-        System.out.println ("If DANGER is HIGH, Pacman is RunningAwayFromGhost");
-        System.out.println ("If DANGER is MEDIUM, Pacman is GoingToClosestPowerpill");
-        System.out.println ("If DANGER is LOW, Pacman is GoingToClosestPill");
+        System.out.println ("Función de pertenencia CLOSEST_GHOST Near =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)));
+        System.out.println ("Función de pertenencia CLOSEST_GHOST Medium =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)));
+        System.out.println ("Función de pertenencia CLOSEST_GHOST Far=" + Arrays.toString(Arrays.copyOfRange(mChromosome,8,12)) + "\n");
 
+        System.out.println ("Función de pertenencia Danger Low =" + Arrays.toString(Arrays.copyOfRange(mChromosome,12,16)));
+        System.out.println ("Función de pertenencia Danger Moderate =" + Arrays.toString(Arrays.copyOfRange(mChromosome,16,20)));
+        System.out.println ("Función de pertenencia Danger High =" + Arrays.toString(Arrays.copyOfRange(mChromosome,20,24)) + "\n");
     }
 }

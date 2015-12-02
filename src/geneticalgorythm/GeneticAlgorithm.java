@@ -1,5 +1,8 @@
 package geneticalgorythm;
 
+import pacman.controllers.examples.GeneticPacMan;
+import pacman.controllers.examples.RandomGhosts;
+import pacman.Executor;
 import java.util.ArrayList;     // arrayLists are more versatile than arrays
 import java.util.Arrays;
 import java.util.Random;
@@ -16,8 +19,9 @@ import java.util.Random;
 
 public class GeneticAlgorithm {
     // --- constants
-    static int CHROMOSOME_SIZE=12;
+    static int CHROMOSOME_SIZE=24; //must be multiple of 4
     static int POPULATION_SIZE=500;
+    static int MAXIMUM_DISTANCE=150;
 
     // --- variables:
 
@@ -88,8 +92,28 @@ public class GeneticAlgorithm {
         // Initializing the population (we chose 500 genes for the population,
         // but you can play with the population size to try different approaches)
         GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
-        System.out.println();
-        population.getGene(0).printPhenotype();
+        population.getGene(0).printPhenotype(); //this is ugly. take out of gene in next iteration.
+//        int[][] phenotype = population.getGene(0).getPhenotype();
+//        for(int[] function : phenotype){
+//            System.out.print(Arrays.toString(function));
+//        }
+//        System.out.println();
+//        double[][] decodedPhenotype = population.getGene(0).getDecodedPhenotype();
+//        for(double[] function : decodedPhenotype){
+//            System.out.print(Arrays.toString(function));
+//        }
+
+        Executor exec=new Executor();
+
+        //run multiple games in batch mode - good for testing.
+        int numTrials=1;
+
+        GeneticPacMan geneticPacMan = new GeneticPacMan();
+        geneticPacMan.initFuzzy(population.getGene(0).getDecodedPhenotype());
+
+        exec.runExperiment(geneticPacMan,new RandomGhosts(),numTrials);
+
+
 //        population.printPopulation();
 
 //        int generationCount = 0;
