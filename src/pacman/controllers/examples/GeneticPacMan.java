@@ -9,12 +9,9 @@ import com.fuzzylite.rule.RuleBlock;
 import com.fuzzylite.term.Trapezoid;
 import com.fuzzylite.variable.InputVariable;
 import com.fuzzylite.variable.OutputVariable;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import pacman.controllers.Controller;
 import pacman.game.Constants;
 import pacman.game.Game;
-import pacman.game.internal.Ghost;
-
 import static pacman.game.Constants.DM;
 import static pacman.game.Constants.MOVE;
 
