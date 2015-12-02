@@ -3,9 +3,12 @@ package geneticalgorythm;
 import pacman.controllers.examples.GeneticPacMan;
 import pacman.controllers.examples.RandomGhosts;
 import pacman.Executor;
+import pacman.controllers.examples.StarterGhosts;
+
 import java.util.ArrayList;     // arrayLists are more versatile than arrays
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 
 /**
@@ -91,29 +94,32 @@ public class GeneticAlgorithm {
     public static void main( String[] args ){
         // Initializing the population (we chose 500 genes for the population,
         // but you can play with the population size to try different approaches)
-        GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
-        population.getGene(0).printPhenotype(); //this is ugly. take out of gene in next iteration.
-//        int[][] phenotype = population.getGene(0).getPhenotype();
-//        for(int[] function : phenotype){
-//            System.out.print(Arrays.toString(function));
-//        }
-//        System.out.println();
-//        double[][] decodedPhenotype = population.getGene(0).getDecodedPhenotype();
-//        for(double[] function : decodedPhenotype){
-//            System.out.print(Arrays.toString(function));
-//        }
 
+        Scanner reader = new Scanner(System.in);
+        int counter = 0;
+        GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
         Executor exec=new Executor();
 
-        //run multiple games in batch mode - good for testing.
-        int numTrials=1;
+        while(true) {
+            System.out.println("Init 1 to print next gen, 2 to exit");
+            int input = reader.nextInt();
+            if(input == 1) {
+                System.out.println("Gen nº"+(counter+1));
 
-        GeneticPacMan geneticPacMan = new GeneticPacMan();
-        geneticPacMan.initFuzzy(population.getGene(0).getDecodedPhenotype());
+                population.getGene(counter).printPhenotype(); //this is ugly. take out of gene in next iteration.
+                System.out.println("Executing experiment with current gene...");
 
-        exec.runExperiment(geneticPacMan,new RandomGhosts(),numTrials);
+                //run multiple games in batch mode - good for testing.
+                int numTrials=1;
 
+                GeneticPacMan geneticPacMan = new GeneticPacMan();
+                geneticPacMan.initFuzzy(population.getGene(counter).getDecodedPhenotype());
 
+                exec.runExperiment(geneticPacMan,new StarterGhosts(),numTrials);
+                counter++;
+            }
+            if (input == 2) break;
+        }
 //        population.printPopulation();
 
 //        int generationCount = 0;
