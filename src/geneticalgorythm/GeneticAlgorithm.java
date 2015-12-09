@@ -76,19 +76,17 @@ public class GeneticAlgorithm {
         System.out.println("Producing next generation...");
         System.out.println("\nCrossing best candidates...");
         Gene[] children = currentBestOffspring[0].reproduce(currentBestOffspring[1]);
-        System.out.println("\nMutating random gene...");
-        int mutatePos = new Random().nextInt(POPULATION_SIZE);
-        mPopulation.get(mutatePos).mutate();
+        System.out.println("\nMutating genes...");
+        for(Gene gen : mPopulation){
+            gen.mutate();
+        }
         System.out.println("\nReplacing worst genes with new children...");
-        mPopulation.set(currentWorstOffspringPos[0], currentBestOffspring[0]);
-        mPopulation.set(currentWorstOffspringPos[1], currentBestOffspring[1]);
+        mPopulation.set(currentWorstOffspringPos[0], children[0]);
+        mPopulation.set(currentWorstOffspringPos[1], children[1]);
 
         generationNumber++;
     }
 
-    //WE NEED ANOTHER METHOD which decides who are reinserted
-
-    // accessors
     /**
      * @return the size of the population
      */
@@ -116,7 +114,6 @@ public class GeneticAlgorithm {
         for(int i = 0; i < POPULATION_SIZE; i++) {
             geneticPacMan.initFuzzy(mPopulation.get(i).getDecodedPhenotype());
             currentScore = exec.runExperiment(geneticPacMan,new StarterGhosts(), 1);
-//            System.out.println(i + " " + currentScore);
             if(bestScore[0] < currentScore){
                 bestScore[1] = bestScore[0];
                 bestPos[1] = bestPos[0];
@@ -141,7 +138,9 @@ public class GeneticAlgorithm {
         if(bestOffspringScore < bestScore[0]) bestOffspringScore = bestScore[0];
 
         System.out.println("Best gene was the one at pos " + bestPos[0] + " with an score of " +bestScore[0]);
+        mPopulation.get(bestPos[0]).printPhenotype();
         System.out.println("Second best gene was the one at pos " + bestPos[1] + " with an score of " +bestScore[1]);
+        mPopulation.get(bestPos[1]).printPhenotype();
         System.out.println("Worst gene was the one at pos " + currentWorstOffspringPos[0] + " with an score of " +worstScore[0]);
         System.out.println("Second worst gene was the one at pos " + currentWorstOffspringPos[1] + " with an score of " +worstScore[1]);
         result[0] = mPopulation.get(bestPos[0]);
@@ -166,11 +165,14 @@ public class GeneticAlgorithm {
                 System.out.println("Generation number: " + population.generationNumber);
                 System.out.println("Executing experiment on population...\n");
                 population.evaluateGeneration();
+                population.produceNextGeneration();
             }
             if(input == 2) {
                 while(population.bestOffspringScore < 6000) {
+                    System.out.println("Generation number: " + population.generationNumber);
                     System.out.println("Executing experiment on population...\n");
                     population.evaluateGeneration();
+                    population.produceNextGeneration();
                 }
             }
             if (input == 3) break;

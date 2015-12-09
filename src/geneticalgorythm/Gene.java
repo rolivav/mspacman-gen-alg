@@ -63,12 +63,16 @@ public class Gene {
      */
     public Gene[] reproduce(Gene other){
         Gene[] result = new Gene[2];
+
+        result[0] = new Gene();
+        result[1] = new Gene();
+
         // initilization of offspring chromosome goes HERE
-        for(int i = 0; i < GeneticAlgorithm.CHROMOSOME_SIZE/2; i++ ){
-            result[0].mChromosome[i] = this.mChromosome[i];
-            result[0].mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i] = other.mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i];
+        for(int i = 0; i < 12; i++ ){
+            result[0].mChromosome[i] = mChromosome[i];
+            result[0].mChromosome[12 + i] = other.mChromosome[12 + i];
             result[1].mChromosome[i] = other.mChromosome[i];
-            result[1].mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i] = this.mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i];
+            result[1].mChromosome[12 + i] = mChromosome[12 + i];
         }
         return result;
     }
@@ -81,7 +85,23 @@ public class Gene {
      * or (more often) on a gene which will not produce any offspring afterwards.
      */
     public void mutate(){
+        Random random = new Random();
+        int rand = random.nextInt(100);
+        if(rand == 10) {
+            int pos = random.nextInt(GeneticAlgorithm.CHROMOSOME_SIZE);
+            int previousOp = 0;
+            int nextOp = 37;
 
+            if (pos != 0 && pos!= 4 && pos!= 8 && pos != 12 && pos != 16 && pos!= 20) {
+                previousOp = mChromosome[pos - 1];
+            }
+            if (pos!= 3 && pos!= 7 && pos != 11 && pos != 15 && pos!= 19 && pos != 23) {
+                nextOp = mChromosome[pos + 1];
+            }
+            int newVal = random.nextInt(Math.abs(nextOp - previousOp)) + previousOp;
+            mChromosome[pos] = newVal;
+            System.out.println("Gene mutated on "+pos+": " + Arrays.toString(mChromosome));
+        }
     }
     /**
      * Sets the fitness, after it is evaluated in the geneticalgorythm.GeneticAlgorithm class.
@@ -145,9 +165,9 @@ public class Gene {
     }
 
     public void printPhenotype() {
-        System.out.println ("If CLOSEST_GHOST is NEAR, DANGER is HIGH");
-        System.out.println ("If CLOSEST_GHOST is MEDIUM, DANGER is MODERATE");
-        System.out.println ("If CLOSEST_GHOST is FAR, DANGER is LOW\n");
+//        System.out.println ("If CLOSEST_GHOST is NEAR, DANGER is HIGH");
+//        System.out.println ("If CLOSEST_GHOST is MEDIUM, DANGER is MODERATE");
+//        System.out.println ("If CLOSEST_GHOST is FAR, DANGER is LOW\n");
 
         System.out.println ("Función de pertenencia CLOSEST_GHOST Near =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)));
         System.out.println ("Función de pertenencia CLOSEST_GHOST Medium =" + Arrays.toString(Arrays.copyOfRange(mChromosome,0,4)));
