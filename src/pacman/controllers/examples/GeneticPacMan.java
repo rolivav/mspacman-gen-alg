@@ -136,7 +136,7 @@ public class GeneticPacMan extends Controller<MOVE>
 					closestPillPos = pills[i];
 				}
 			}
-			System.out.println("DANGER: LOW");
+//			System.out.println("DANGER: LOW");
 			return game.getNextMoveTowardsTarget(pacmanCurrentNode, closestPillPos,DM.PATH);
 		//DANGER MEDIUM
 		} else if (currentDanger >= 0.3 && currentDanger < 0.7) {
@@ -150,12 +150,12 @@ public class GeneticPacMan extends Controller<MOVE>
 					closestPillPos = pills[i];
 				}
 			}
-			System.out.println("DANGER: MEDIUM");
+//			System.out.println("DANGER: MEDIUM");
 			return game.getNextMoveTowardsTarget(pacmanCurrentNode, closestPillPos,DM.PATH);
 		}
 		//DANGER HIGH
 		else {
-			System.out.println("DANGER: HIGH");
+//			System.out.println("DANGER: HIGH");
 			return game.getNextMoveAwayFromTarget(pacmanCurrentNode, game.getGhostCurrentNodeIndex(closestGhostEnum),DM.PATH);
 		}
 	}

@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class GeneticAlgorithm {
     // --- constants
     static int CHROMOSOME_SIZE=24; //must be multiple of 4
-    static int POPULATION_SIZE=500;
+    static int POPULATION_SIZE=300;
     static int MAXIMUM_DISTANCE=150;
 
     // --- variables:
@@ -34,6 +34,10 @@ public class GeneticAlgorithm {
      */
     ArrayList<Gene> mPopulation;
 
+    Gene[] currentBestOffspring;
+    int[] currentWorstOffspringPos;
+    int generationNumber = 0;
+    double bestOffspringScore = 0;
     // --- functions:
 
     /**
@@ -58,9 +62,8 @@ public class GeneticAlgorithm {
      * evaluated (e.g based on its performance)
      */
     public void evaluateGeneration(){
-        for(int i = 0; i < mPopulation.size(); i++){
-            // evaluation of the fitness function for each gene in the population goes HERE
-        }
+        System.out.println("Selecting best genes by their obtained score vs Starter Ghosts...");
+        currentBestOffspring = getBestGenesFromPopulation();
     }
     /**
      * With each gene's fitness as a guide, chooses which genes should mate and produce offspring.
@@ -70,8 +73,17 @@ public class GeneticAlgorithm {
      */
     public void produceNextGeneration(){
         // use one of the offspring techniques suggested in class (also applying any mutations) HERE
-    	
-    	
+        System.out.println("Producing next generation...");
+        System.out.println("\nCrossing best candidates...");
+        Gene[] children = currentBestOffspring[0].reproduce(currentBestOffspring[1]);
+        System.out.println("\nMutating random gene...");
+        int mutatePos = new Random().nextInt(POPULATION_SIZE);
+        mPopulation.get(mutatePos).mutate();
+        System.out.println("\nReplacing worst genes with new children...");
+        mPopulation.set(currentWorstOffspringPos[0], currentBestOffspring[0]);
+        mPopulation.set(currentWorstOffspringPos[1], currentBestOffspring[1]);
+
+        generationNumber++;
     }
 
     //WE NEED ANOTHER METHOD which decides who are reinserted
@@ -90,77 +102,79 @@ public class GeneticAlgorithm {
 
     public void printPopulation() { for(Gene gene : mPopulation) System.out.println(Arrays.toString(gene.getPhenotype()));}
 
+    public Gene[] getBestGenesFromPopulation() {
+        Gene[] result = new Gene[2];
+        Executor exec=new Executor();
+        GeneticPacMan geneticPacMan = new GeneticPacMan();
+        int[] bestPos = new int [2];
+        double[] bestScore =  new double[2];
+        currentWorstOffspringPos = new int[2];
+        double[] worstScore =  new double[2];
+        worstScore[0]  = 10000.0;
+        worstScore[1] = 10000.0;
+        double currentScore;
+        for(int i = 0; i < POPULATION_SIZE; i++) {
+            geneticPacMan.initFuzzy(mPopulation.get(i).getDecodedPhenotype());
+            currentScore = exec.runExperiment(geneticPacMan,new StarterGhosts(), 1);
+//            System.out.println(i + " " + currentScore);
+            if(bestScore[0] < currentScore){
+                bestScore[1] = bestScore[0];
+                bestPos[1] = bestPos[0];
+                bestScore[0] = currentScore;
+                bestPos[0] = i;
+            }else if (bestScore[1] < currentScore){
+                bestScore[1] = currentScore;
+                bestPos[1] = i;
+            }
+
+            if(worstScore[0] > currentScore){
+                worstScore[1] = worstScore[0];
+                worstScore[0] = currentScore;
+                currentWorstOffspringPos[1] = currentWorstOffspringPos[0];
+                currentWorstOffspringPos[0] = i;
+            }else if (worstScore[1] > currentScore){
+                worstScore[1] = currentScore;
+                currentWorstOffspringPos[1] = i;
+            }
+        }
+
+        if(bestOffspringScore < bestScore[0]) bestOffspringScore = bestScore[0];
+
+        System.out.println("Best gene was the one at pos " + bestPos[0] + " with an score of " +bestScore[0]);
+        System.out.println("Second best gene was the one at pos " + bestPos[1] + " with an score of " +bestScore[1]);
+        System.out.println("Worst gene was the one at pos " + currentWorstOffspringPos[0] + " with an score of " +worstScore[0]);
+        System.out.println("Second worst gene was the one at pos " + currentWorstOffspringPos[1] + " with an score of " +worstScore[1]);
+        result[0] = mPopulation.get(bestPos[0]);
+        result[1] = mPopulation.get(bestPos[1]);
+        return result;
+    }
+
     // Genetic Algorithm maxA testing method
     public static void main( String[] args ){
         // Initializing the population (we chose 500 genes for the population,
         // but you can play with the population size to try different approaches)
 
         Scanner reader = new Scanner(System.in);
-        int counter = 0;
+
+        System.out.println("Creating random population...");
         GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
-        Executor exec=new Executor();
 
         while(true) {
-            System.out.println("Init 1 to print next gen, 2 to exit");
+            System.out.println("Init 1 to test current population, 2 to keep testing until best gene reaches 6000 score, 3 to exit");
             int input = reader.nextInt();
             if(input == 1) {
-                System.out.println("Gen nº"+(counter+1));
-
-                population.getGene(counter).printPhenotype(); //this is ugly. take out of gene in next iteration.
-                System.out.println("Executing experiment with current gene...");
-
-                //run multiple games in batch mode - good for testing.
-                int numTrials=1;
-
-                GeneticPacMan geneticPacMan = new GeneticPacMan();
-                geneticPacMan.initFuzzy(population.getGene(counter).getDecodedPhenotype());
-
-                exec.runExperiment(geneticPacMan,new StarterGhosts(),numTrials);
-                counter++;
+                System.out.println("Generation number: " + population.generationNumber);
+                System.out.println("Executing experiment on population...\n");
+                population.evaluateGeneration();
             }
-            if (input == 2) break;
+            if(input == 2) {
+                while(population.bestOffspringScore < 6000) {
+                    System.out.println("Executing experiment on population...\n");
+                    population.evaluateGeneration();
+                }
+            }
+            if (input == 3) break;
         }
-//        population.printPopulation();
-
-//        int generationCount = 0;
-//        // For the sake of this sample, evolution goes on forever.
-//        // If you wish the evolution to halt (for instance, after a number of
-//        //   generations is reached or the maximum fitness has been achieved),
-//        //   this is the place to make any such checks
-////        while(true){
-//            // --- evaluate current generation:
-//            population.evaluateGeneration();
-//            // --- print results here:
-//            // we choose to print the average fitness,
-//            // as well as the maximum and minimum fitness
-//            // as part of our progress monitoring
-//            float avgFitness=0.f;
-//            float minFitness=Float.POSITIVE_INFINITY;
-//            float maxFitness=Float.NEGATIVE_INFINITY;
-//            String bestIndividual="";
-//		String worstIndividual="";
-//            for(int i = 0; i < population.size(); i++){
-//                float currFitness = population.getGene(i).getFitness();
-//                avgFitness += currFitness;
-//                if(currFitness < minFitness){
-//                    minFitness = currFitness;
-//                    worstIndividual = population.getGene(i).getPhenotype();
-//                }
-//                if(currFitness > maxFitness){
-//                    maxFitness = currFitness;
-//                    bestIndividual = population.getGene(i).getPhenotype();
-//                }
-//            }
-//            if(population.size()>0){ avgFitness = avgFitness/population.size(); }
-//            String output = "Generation: " + generationCount;
-//            output += "\t AvgFitness: " + avgFitness;
-//            output += "\t MinFitness: " + minFitness + " (" + worstIndividual +")";
-//            output += "\t MaxFitness: " + maxFitness + " (" + bestIndividual +")";
-//            System.out.println(output);
-//            // produce next generation:
-//            population.produceNextGeneration();
-//            generationCount++;
-//        }
     }
-};
+}
 

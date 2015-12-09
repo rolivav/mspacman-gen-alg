@@ -64,6 +64,12 @@ public class Gene {
     public Gene[] reproduce(Gene other){
         Gene[] result = new Gene[2];
         // initilization of offspring chromosome goes HERE
+        for(int i = 0; i < GeneticAlgorithm.CHROMOSOME_SIZE/2; i++ ){
+            result[0].mChromosome[i] = this.mChromosome[i];
+            result[0].mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i] = other.mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i];
+            result[1].mChromosome[i] = other.mChromosome[i];
+            result[1].mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i] = this.mChromosome[GeneticAlgorithm.CHROMOSOME_SIZE/2 + i];
+        }
         return result;
     }
 
@@ -75,6 +81,7 @@ public class Gene {
      * or (more often) on a gene which will not produce any offspring afterwards.
      */
     public void mutate(){
+
     }
     /**
      * Sets the fitness, after it is evaluated in the geneticalgorythm.GeneticAlgorithm class.

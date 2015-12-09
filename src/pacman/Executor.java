@@ -91,7 +91,7 @@ public class Executor
      * @param ghostController The Ghosts controller
      * @param trials The number of trials to be executed
      */
-    public void runExperiment(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,int trials)
+    public double runExperiment(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,int trials)
     {
     	double avgScore=0;
     	
@@ -109,10 +109,11 @@ public class Executor
 			}
 			
 			avgScore+=game.getScore();
-			System.out.println(i+"\t"+game.getScore());
+//			System.out.println(i+"\t"+game.getScore());
 		}
 		
-		System.out.println(avgScore/trials);
+//		System.out.println(avgScore/trials);
+		return avgScore/trials;
     }
 	/**
 	 * For running multiple games without visuals. This is useful to get a good idea of how well a controller plays
