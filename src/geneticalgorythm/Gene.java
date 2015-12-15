@@ -62,17 +62,20 @@ public class Gene {
      * These offspring will need to be added to the next generation.
      */
     public Gene[] reproduce(Gene other){
-        Gene[] result = new Gene[2];
 
-        result[0] = new Gene();
-        result[1] = new Gene();
+        Random rand = new Random();
+        int next;
 
-        // initilization of offspring chromosome goes HERE
-        for(int i = 0; i < 12; i++ ){
-            result[0].mChromosome[i] = mChromosome[i];
-            result[0].mChromosome[12 + i] = other.mChromosome[12 + i];
-            result[1].mChromosome[i] = other.mChromosome[i];
-            result[1].mChromosome[12 + i] = mChromosome[12 + i];
+        Gene[] result = new Gene[GeneticAlgorithm.POPULATION_SIZE/2];
+
+        for(int i = 0; i < GeneticAlgorithm.POPULATION_SIZE/2; i++) {
+            result[i] = new Gene();
+
+            for (int j = 0; j < GeneticAlgorithm.CHROMOSOME_SIZE; j++){
+                next = Math.abs(mChromosome[j] - other.mChromosome[j]);
+                if(next <= 0) next = 1;
+                result[i].mChromosome[j] = Math.min(mChromosome[j], other.mChromosome[j]) + rand.nextInt(next);
+            }
         }
         return result;
     }
@@ -87,6 +90,7 @@ public class Gene {
     public void mutate(){
         Random random = new Random();
         int rand = random.nextInt(100);
+        int next = 0;
         if(rand == 10) {
             int pos = random.nextInt(GeneticAlgorithm.CHROMOSOME_SIZE);
             int previousOp = 0;
@@ -98,7 +102,9 @@ public class Gene {
             if (pos!= 3 && pos!= 7 && pos != 11 && pos != 15 && pos!= 19 && pos != 23) {
                 nextOp = mChromosome[pos + 1];
             }
-            int newVal = random.nextInt(Math.abs(nextOp - previousOp)) + previousOp;
+            next = Math.abs(nextOp - previousOp);
+            if(next <= 0) next = 1;
+            int newVal = random.nextInt(next) + previousOp;
             mChromosome[pos] = newVal;
             System.out.println("Gene mutated on "+pos+": " + Arrays.toString(mChromosome));
         }
@@ -159,6 +165,8 @@ public class Gene {
         }
         return result;
     }
+
+    public String toString() { return Arrays.toString(mChromosome); }
 
     public int[] getChromosome() {
         return mChromosome;

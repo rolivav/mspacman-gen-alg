@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eclipse-userlibraries>
   <library name="jfuzzylite">
-    <archive path="E:/IdeaProjects/mspacman-gen-alg/lib/jfuzzylite.jar" />
+    <archive path="C:/Users/Rodrigo/Desktop/jfuzzylite.jar" />
   </library>
 </eclipse-userlibraries>
 

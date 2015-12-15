@@ -1,5 +1,6 @@
 package geneticalgorythm;
 
+import pacman.controllers.Controller;
 import pacman.controllers.examples.GeneticPacMan;
 import pacman.controllers.examples.RandomGhosts;
 import pacman.Executor;
@@ -80,10 +81,15 @@ public class GeneticAlgorithm {
         for(Gene gen : mPopulation){
             gen.mutate();
         }
-        System.out.println("\nReplacing worst genes with new children...");
-        mPopulation.set(currentWorstOffspringPos[0], children[0]);
-        mPopulation.set(currentWorstOffspringPos[1], children[1]);
-
+        System.out.println("\nReplacing genes at random with new children...");
+        Random rand = new Random();
+        int next;
+        for (Gene child : children) {
+            next = rand.nextInt(GeneticAlgorithm.POPULATION_SIZE);
+//            System.out.println(mPopulation.get(next) + " " + child);
+            mPopulation.set(next, child);
+        }
+        System.out.println("\nNew generation created!");
         generationNumber++;
     }
 
@@ -154,13 +160,18 @@ public class GeneticAlgorithm {
         // but you can play with the population size to try different approaches)
 
         Scanner reader = new Scanner(System.in);
-
         System.out.println("Creating random population...");
         GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
 
         while(true) {
-            System.out.println("Init 1 to test current population, 2 to keep testing until best gene reaches 6000 score, 3 to exit");
+            System.out.println("\n-----------------------------\n");
+            System.out.println("1. Run algorythm in current population\n" +
+                               "2. Keep running algorythm until best gene reaches 20000 score\n" +
+                               "3. Use runExperiment on best gene obtained yet\n" +
+                               "4. Use runGameTimed on best gene obtained yet\n" +
+                               "5. Exit\n");
             int input = reader.nextInt();
+            System.out.println("-----------------------------\n");
             if(input == 1) {
                 System.out.println("Generation number: " + population.generationNumber);
                 System.out.println("Executing experiment on population...\n");
@@ -168,14 +179,32 @@ public class GeneticAlgorithm {
                 population.produceNextGeneration();
             }
             if(input == 2) {
-                while(population.bestOffspringScore < 6000) {
+                while(population.bestOffspringScore < 20000) {
                     System.out.println("Generation number: " + population.generationNumber);
                     System.out.println("Executing experiment on population...\n");
                     population.evaluateGeneration();
                     population.produceNextGeneration();
                 }
             }
-            if (input == 3) break;
+            if(input == 3) {
+                System.out.println("Executing experiment on current best gene...\n");
+                double score = 0;
+                Executor exec=new Executor();
+                GeneticPacMan geneticPacMan = new GeneticPacMan();
+                geneticPacMan.initFuzzy(population.currentBestOffspring[0].getDecodedPhenotype());
+                score = exec.runExperiment(geneticPacMan,new StarterGhosts(), 1);
+                System.out.println("Gene obtained an score of "+ score);
+
+            }
+            if(input == 4) {
+                System.out.println("Executing game on current best gene...\n");
+                Executor exec=new Executor();
+                GeneticPacMan geneticPacMan = new GeneticPacMan();
+                geneticPacMan.initFuzzy(population.currentBestOffspring[0].getDecodedPhenotype());
+                exec.runGameTimed(geneticPacMan,new StarterGhosts(), true);
+            }
+
+            if (input == 5) break;
         }
     }
 }
